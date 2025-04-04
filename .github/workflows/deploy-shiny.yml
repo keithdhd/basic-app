@@ -36,3 +36,4 @@ jobs:
           --token $SHINY_TOKEN \
           --secret $SHINY_SECRET \
           --title basic-app \
+          -a 14429977
