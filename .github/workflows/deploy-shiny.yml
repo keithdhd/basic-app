@@ -1,0 +1,38 @@
+name: Deploy Python Shiny App to shinyapps.io
+
+on:
+  push:
+    branches:
+      - main  # Or your main branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # Or your desired Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install rsconnect-python
+          pip install -r requirements.txt
+
+      - name: Deploy to shinyapps.io
+        env:
+          SHINY_TOKEN: ${{ secrets.SHINY_TOKEN }}
+          SHINY_SECRET: ${{ secrets.SHINY_SECRET }}
+          SHINY_ACCOUNT: ${{ secrets.SHINY_ACCOUNT }}
+        run: |
+          rsconnect deploy shiny ./ \
+          --account $SHINY_ACCOUNT \
+          --server shinyapps.io \
+          --token $SHINY_TOKEN \
+          --secret $SHINY_SECRET \
+          --title basic-app \
